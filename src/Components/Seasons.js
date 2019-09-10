@@ -46,8 +46,6 @@ const SeasonImage = styled.span`
 `;
 
 export default function Seasons({ result: { seasons } }) {
-  console.log(seasons);
-
   let result = "";
 
   if (seasons === undefined || seasons === null || seasons.length === 0) {
