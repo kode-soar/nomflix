@@ -3,6 +3,13 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 import Helmet from "react-helmet";
 import Loader from "Components/Loader";
+import { Link, withRouter } from "react-router-dom";
+import { Route } from "react-router-dom";
+import Youtube from "Components/Youtube";
+import Production from "Components/Production";
+import Collections from "Components/Collections";
+import Seasons from "Components/Seasons";
+import Creators from "Components/Creators";
 
 const Container = styled.div`
   height: calc(100vh - 50px);
@@ -68,7 +75,35 @@ const Overview = styled.p`
   width: 50%;
 `;
 
-const DetailPresenter = ({ result, loading, error }) =>
+const TapContainer = styled.div`
+  font-size: 12px;
+  opacity: 0.9;
+  line-height: 1.5;
+  width: 100%;
+  margin-top: 15px;
+`;
+
+const Tap = styled.div`
+  border: 2px solid white;
+  font-size: 14px;
+  opacity: 0.9;
+  line-height: 1.5;
+  width: 80px;
+  height: 30px;
+  text-align: center;
+  display: inline-block;
+  background-color: ${props =>
+    props.selected ? "rgba(255, 255, 128, 0.8)" : "rgba(255, 255, 128, 0.3)"};
+`;
+
+const DetailPresenter = ({
+  result,
+  loading,
+  error,
+  isMovie,
+  id,
+  location: { pathname }
+}) =>
   loading ? (
     <>
       <Helmet>
@@ -109,7 +144,12 @@ const DetailPresenter = ({ result, loading, error }) =>
             </Item>
             <Divider>•</Divider>
             <Item>
-              {result.runtime ? result.runtime : result.episode_run_time[0]} min
+              {result.runtime
+                ? result.runtime
+                  ? result.runtime
+                  : result.episode_run_time[0]
+                : "?"}
+              min
             </Item>
             <Divider>•</Divider>
             <Item>
@@ -122,6 +162,78 @@ const DetailPresenter = ({ result, loading, error }) =>
             </Item>
           </ItemContainer>
           <Overview>{result.overview}</Overview>
+          <TapContainer>
+            {isMovie ? (
+              <>
+                <Link to={`/movie/${id}/youtube`}>
+                  <Tap selected={pathname === `/movie/${id}/youtube`}>
+                    Youtube
+                  </Tap>
+                </Link>
+                <Link to={`/movie/${id}/production`}>
+                  <Tap selected={pathname === `/movie/${id}/production`}>
+                    Production
+                  </Tap>
+                </Link>
+                <Link to={`/movie/${id}/collections`}>
+                  <Tap selected={pathname === `/movie/${id}/collections`}>
+                    Collections
+                  </Tap>
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link to={`/show/${id}/youtube`}>
+                  <Tap selected={pathname === `/show/${id}/youtube`}>
+                    Youtube
+                  </Tap>
+                </Link>
+                <Link to={`/show/${id}/seasons`}>
+                  <Tap selected={pathname === `/show/${id}/seasons`}>
+                    Seasons
+                  </Tap>
+                </Link>
+                <Link to={`/show/${id}/production`}>
+                  <Tap selected={pathname === `/show/${id}/production`}>
+                    Production
+                  </Tap>
+                </Link>
+                <Link to={`/show/${id}/creators`}>
+                  <Tap selected={pathname === `/show/${id}/creators`}>
+                    Creators
+                  </Tap>
+                </Link>
+              </>
+            )}
+          </TapContainer>
+          <Route
+            path={`/movie/:id/youtube`}
+            render={() => <Youtube result={result} />}
+          />
+          <Route
+            path={`/movie/:id/production`}
+            render={() => <Production result={result} />}
+          />
+          <Route
+            path={`/movie/:id/collections`}
+            render={() => <Collections result={result} />}
+          />
+          <Route
+            path={`/show/:id/youtube`}
+            render={() => <Youtube id={id} isTv />}
+          />
+          <Route
+            path={`/show/:id/seasons`}
+            render={() => <Seasons result={result} />}
+          />
+          <Route
+            path={`/show/:id/production`}
+            render={() => <Production result={result} />}
+          />
+          <Route
+            path={`/show/:id/creators`}
+            render={() => <Creators result={result} />}
+          />
         </Data>
       </Content>
     </Container>
@@ -133,4 +245,4 @@ DetailPresenter.propTypes = {
   error: PropTypes.string
 };
 
-export default DetailPresenter;
+export default withRouter(DetailPresenter);
