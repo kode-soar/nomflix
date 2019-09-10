@@ -19,8 +19,9 @@ const Margin = styled.div`
 export default function Youtube(props) {
   let id = props.id;
   let isTv = props.isTv;
-  let isTvValidation = isTv === undefined ? props.result.videos.results : [];
-  const [results, setYoutubes] = useState(isTvValidation);
+  const [results, setYoutubes] = useState(
+    isTv === undefined ? props.result.videos.results : []
+  );
   const [loading, setLoading] = useState(false);
 
   if (isTv) {
