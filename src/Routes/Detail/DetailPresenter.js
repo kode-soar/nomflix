@@ -56,6 +56,19 @@ const Data = styled.div`
 
 const Title = styled.h3`
   font-size: 32px;
+  display: inline;
+`;
+
+const LinkBtn = styled.span`
+  width: 30px;
+  height: 20px;
+  background-color: purple;
+  border-radius: 3px;
+  color: white;
+  font-weight: 600;
+  font-size: 12px;
+  padding: 3px;
+  margin-left: 5px;
 `;
 
 const ItemContainer = styled.div`
@@ -136,6 +149,18 @@ const DetailPresenter = ({
               ? result.original_title
               : result.original_name}
           </Title>
+          {isMovie ? (
+            <a
+              href={`https://www.imdb.com/title/${result.imdb_id}/`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <LinkBtn>IMDB</LinkBtn>
+            </a>
+          ) : (
+            ""
+          )}
+
           <ItemContainer>
             <Item>
               {result.release_date
